@@ -1,8 +1,8 @@
 package com.jiezhan.auth.controller;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.jiezhan.auth.model.Result;
 import com.jiezhan.auth.service.UserService;
+import com.netflix.client.ClientException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

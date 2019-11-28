@@ -2,11 +2,8 @@ package com.jiezhan.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-@EnableFeignClients
-@CrossOrigin
+//@EnableFeignClients
 @SpringBootApplication
 public class AuthApplication {
 
