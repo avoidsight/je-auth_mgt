@@ -1,0 +1,8 @@
+GET http://localhost:20070/api/v2.0/auth/test/healthCheck
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-28T095250.200.txt
+
+###
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiezhan.auth.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jiezhan.auth.model.entity.User">
+        <id column="user_id" property="userId" />
+        <result column="open_id" property="openId" />
+        <result column="username" property="username" />
+        <result column="nick" property="nick" />
+        <result column="identity_id" property="identityId" />
+        <result column="avatar" property="avatar" />
+        <result column="birth" property="birth" />
+        <result column="password" property="password" />
+        <result column="phone" property="phone" />
+        <result column="sex" property="sex" />
+        <result column="user_score" property="userScore" />
+        <result column="emergency_contact_phone" property="emergencyContactPhone" />
+        <result column="emergency_contact_relation" property="emergencyContactRelation" />
+        <result column="last_login_identity" property="lastLoginIdentity" />
+        <result column="is_identification_approved" property="isIdentificationApproved" />
+        <result column="is_driver_approved" property="isDriverApproved" />
+        <result column="register_time" property="registerTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted_time" property="deletedTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="order_quantity" property="orderQuantity" />
+    </resultMap>
+
+
+</mapper>
