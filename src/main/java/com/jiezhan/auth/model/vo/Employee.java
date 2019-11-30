@@ -41,5 +41,12 @@ public class Employee {
 
     private String empStatus;
 
+    private Object operator;
+
+
+    private Object position;
+
+    private Object dept;
+
 
 }

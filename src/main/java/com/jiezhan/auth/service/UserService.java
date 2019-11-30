@@ -1,11 +1,11 @@
 package com.jiezhan.auth.service;
 
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.IService;
 import com.jiezhan.auth.model.Result;
 import com.jiezhan.auth.model.entity.User;
-import com.netflix.client.ClientException;
 
 /**
  * @author: zp

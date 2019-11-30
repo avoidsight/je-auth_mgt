@@ -39,7 +39,7 @@ public class JwtRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User user = userService.selectUserByPhone(JwtUtil.getPhone(principals.toString()));
+        User user = userService.selectUserByPhone(JwtUtil.getUserId(principals.toString()));
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         // 添加角色
@@ -51,7 +51,7 @@ public class JwtRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
         String token = (String) auth.getCredentials();
         // 解密获得token
-        String phone = JwtUtil.getPhone(token);
+        String phone = JwtUtil.getUserId(token);
         User user = userService.selectUserByPhone(phone);
         if (user == null || !JwtUtil.verify(token, user.getPassword())) {
             throw new IncorrectCredentialsException(ResultEnums.TOKEN_INVALID.getMsg());

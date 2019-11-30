@@ -1,73 +1,57 @@
 package com.jiezhan.auth.controller;
 
-import com.jiezhan.auth.model.Result;
-import com.jiezhan.auth.service.UserService;
-import com.netflix.client.ClientException;
+import com.jiezhan.auth.feign.EmployeeFeign;
+import com.jiezhan.auth.model.vo.LoginVo;
+import com.jiezhan.auth.model.vo.UserVo;
+import com.jiezhan.auth.service.LoginService;
+import com.jiezhan.auth.utils.Response;
+import com.jiezhan.auth.utils.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: zp
- * @Date: 2019-11-20 10:46
+ * @Date: 2019-11-29 11:23
  * @Description:
  */
-@Api(value = "auth", tags = "验证")
+@Api(value = "auth",tags = "登陆")
 @RestController
-@RequestMapping("/api/v2.0/auth")
+@RequestMapping("/api/2/0/auth")
 public class LoginController {
 
     @Resource
-    private UserService userService;
+    EmployeeFeign employeeFeign;
 
+    @Resource
+    LoginService loginService;
 
-    /**
-     * 发送注册验证码
-     * @param phone 手机号
-     * @return 发送结果
-     */
-    @GetMapping("/registerCode")
-    public Result sendRegisterCode(@RequestParam String phone) throws ClientException {
-        return userService.sendRegisterCode(phone);
+    @GetMapping
+    @ApiOperation("获取登陆人信息")
+    public Response getEmp(@ApiParam("账号") @RequestParam() String account) {
+        return employeeFeign.getByAccount(account);
     }
 
-
-    /**
-     * 注册
-     * @param phone 手机号
-     * @param code 验证码
-     * @return 注册结果
-     */
-    @PostMapping("/register")
-    public Result register(@RequestParam String phone, @RequestParam String code){
-        return userService.register(phone,code);
-    }
-
-
-    /**
-     * 发送登录验证码
-     * @param phone 手机号
-     * @return 发送结果
-     */
-    @GetMapping("/loginCode")
-    public Result sendLoginCode(@RequestParam String phone) throws ClientException {
-        return userService.sendLoginCode(phone);
-    }
-
-    /**
-     * 登录
-     * @param phone 手机号
-     * @param code 验证码
-     * @param password 密码
-     * @param loginType 登录方式 Password/Code
-     * @return 返回是否登录成功
-     */
-    @ApiOperation("登陆")
     @PostMapping("/login")
-    public Result login(@ApiParam @RequestParam String phone, @ApiParam @RequestParam String code,@ApiParam @RequestParam String password,@ApiParam @RequestParam String loginType){
-        return userService.login(phone, code, password, loginType);
+    @ApiOperation("登陆")
+    public Response login(@ApiParam("登陆账号密码") @RequestBody LoginVo loginVo) {
+        Map result = new HashMap(2);
+        String token = loginService.login(loginVo);
+        UserVo user = loginService.getUserInfo(token);
+        result.put("accessToken ",token);
+        result.put("user",user);
+        return ResponseUtils.success(result);
     }
+
+    @GetMapping("/token")
+    @ApiOperation("根据token获取user信息")
+    public Response getUser(@ApiParam("token") @RequestParam String token){
+        return ResponseUtils.success(loginService.getUserInfo(token));
+    }
+
 }

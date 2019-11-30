@@ -4,12 +4,14 @@ import lombok.Data;
 
 /**
  * @author: zp
- * @Date: 2019-11-20 11:04
+ * @Date: 2019-11-29 17:18
  * @Description:
  */
 @Data
 public class UserVo {
-    private String account;
+    private String userId;
 
-    private String password;
+    private String userName;
+
+    private String userType;
 }

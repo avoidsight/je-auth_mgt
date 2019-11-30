@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jiezhan.auth.constant.Constant;
+import com.jiezhan.auth.model.vo.UserVo;
 
 import java.util.Date;
 
@@ -28,8 +29,9 @@ public class JwtUtil {
             // 根据密码生成JWT效验器
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("phone", getPhone(token))
                     .withClaim("userId", getUserId(token))
+                    .withClaim("userName",getUserName(token))
+                    .withClaim("userType", getUserType(token))
                     .build();
             // 效验TOKEN
             verifier.verify(token);
@@ -44,10 +46,10 @@ public class JwtUtil {
      *
      * @return token中包含的用户名
      */
-    public static String getPhone(String token) {
+    public static String getUserType(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("phone").asString();
+            return jwt.getClaim("userType").asString();
         } catch (JWTDecodeException e) {
             return null;
         }
@@ -68,20 +70,54 @@ public class JwtUtil {
     }
 
     /**
+     * 获得token中的信息无需secret解密也能获得
      *
-     * @param phone 用户名/手机号
-     * @param userId   用户id
-     * @param secret   用户的密码
+     * @return token中包含的用户名
+     */
+    public static String getUserName(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("userName").asString();
+        } catch (JWTDecodeException e) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param userId
+     * @param userName
+     * @param userType
+     * @param secret
      * @return 加密的token
      */
-    public static String sign(String phone,Integer userId, String secret) {
+    public static String sign(String userId,String userName, String userType, String secret) {
         Date date = new Date(System.currentTimeMillis() + Constant.TOKEN_EXPIRE_TIME);
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
-                .withClaim("phone", phone)
-                .withClaim("userId", String.valueOf(userId))
+                .withClaim("userId", userId)
+                .withClaim("userName",userName)
+                .withClaim("userType", userType)
                 .withExpiresAt(date)
                 .sign(algorithm);
 
+    }
+
+    /**
+     * 根据token获取user信息
+     * @param token
+     * @return
+     */
+    public static UserVo getUserInfo(String token) {
+        try {
+            UserVo user = new UserVo();
+
+            user.setUserId(getUserId(token));
+            user.setUserName(getUserName(token));
+            user.setUserType(getUserType(token));
+            return user;
+        } catch (JWTDecodeException e) {
+            return null;
+        }
     }
 }

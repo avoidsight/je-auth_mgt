@@ -13,7 +13,6 @@ import com.jiezhan.auth.service.UserRoleService;
 import com.jiezhan.auth.service.UserService;
 import com.jiezhan.auth.shiro.token.CustomizedToken;
 import com.jiezhan.auth.utils.CommonsUtils;
-import com.jiezhan.auth.utils.JwtUtil;
 import com.jiezhan.auth.utils.RedisUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.ExpiredCredentialsException;
@@ -128,7 +127,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             Map<String, Object> data = new HashMap<>(1);
             User user = selectUserByPhone(phone);
             // 生成jwtToken
-            String jwtToken = JwtUtil.sign(phone, user.getUserId(), user.getPassword());
+//            String jwtToken = JwtUtil.sign(phone, user.getUserId(), user.getPassword());
+            String jwtToken = null;
             // token
             data.put("jwtToken", jwtToken);
             return Result.success(data);
