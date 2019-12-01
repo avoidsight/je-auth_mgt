@@ -1,6 +1,6 @@
 package com.jiezhan.auth.feign;
 
-import com.jiezhan.auth.model.vo.Employee;
+import com.jiezhan.auth.model.vo.AccountVo;
 import com.jiezhan.auth.utils.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,5 +19,5 @@ public interface EmployeeFeign {
      * @return
      */
     @GetMapping("/getByAccount")
-    Response<Employee> getByAccount(@RequestParam("account") String account);
+    Response<AccountVo> getByAccount(@RequestParam("account") String account);
 }

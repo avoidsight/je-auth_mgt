@@ -4,7 +4,7 @@ import com.jiezhan.auth.enums.ErrorType;
 import com.jiezhan.auth.enums.LoginType;
 import com.jiezhan.auth.exception.ServiceException;
 import com.jiezhan.auth.feign.EmployeeFeign;
-import com.jiezhan.auth.model.vo.Employee;
+import com.jiezhan.auth.model.vo.AccountVo;
 import com.jiezhan.auth.model.vo.LoginVo;
 import com.jiezhan.auth.model.vo.UserVo;
 import com.jiezhan.auth.service.LoginService;
@@ -33,8 +33,8 @@ public class LoginServiceImpl implements LoginService {
     public String login(LoginVo user) {
         Assert.notNull(user.getAccount(), "用户名不能为空");
         Assert.notNull(user.getPassword(), "密码不能为空");
-        Employee employee = employeeFeign.getByAccount(user.getAccount()).getData();
-        if(ObjectUtils.isEmpty(employee)) {
+        AccountVo accountVo = employeeFeign.getByAccount(user.getAccount()).getData();
+        if(ObjectUtils.isEmpty(accountVo)) {
             throw new ServiceException(ErrorType.USER_NOT_EXIST);
         }
         // 获取Subject
@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
         try{
             subject.login(token);
             // 生成jwtToken
-            String jwtToken = JwtUtil.sign(employee.getId(),employee.getName(), employee.getDeptId(), user.getPassword());
+            String jwtToken = JwtUtil.sign(accountVo.getId(),accountVo.getName(), accountVo.getPositionName(), user.getPassword());
             return jwtToken;
         }catch (UnknownAccountException e) {
             throw new ServiceException(ErrorType.USER_NOT_EXIST);

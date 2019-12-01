@@ -50,7 +50,7 @@ public class LoginController {
 
     @GetMapping("/token")
     @ApiOperation("根据token获取user信息")
-    public Response getUser(@ApiParam("token") @RequestParam String token){
+    public Response<UserVo> getUser(@ApiParam("token") @RequestParam String token){
         return ResponseUtils.success(loginService.getUserInfo(token));
     }
 
