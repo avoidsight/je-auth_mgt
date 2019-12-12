@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  */
 @Api(value = "auth", tags = "验证")
 @RestController
-@RequestMapping("/api/v2.0/auth")
+@RequestMapping("/api/v2.0/auth/user")
 public class UserController {
 
     @Resource
