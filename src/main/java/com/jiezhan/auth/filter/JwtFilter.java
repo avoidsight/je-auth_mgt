@@ -3,12 +3,14 @@ package com.jiezhan.auth.filter;
 import com.alibaba.fastjson.JSONObject;
 import com.jiezhan.auth.constant.Constant;
 import com.jiezhan.auth.shiro.token.JwtToken;
+import com.jiezhan.auth.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,8 @@ import java.io.PrintWriter;
  */
 @Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
+    @Resource
+    RedisUtil redisUtil;
 
     /**
      * 执行登录认证
@@ -37,6 +41,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         if (token != null) {
             try {
                 executeLogin(request, response);
+                // 刷新token
+                refreshCache(token);
                 return true;
             } catch (IncorrectCredentialsException e) {
                 response.setCharacterEncoding("utf-8");
@@ -54,6 +60,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         }
         // 如果请求头不存在 Token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
         return true;
+    }
+
+    private void refreshCache(String token) {
+        redisUtil.expire(token,Constant.TOKEN_EXPIRE_TIME);
     }
 
     /**
