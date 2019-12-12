@@ -22,7 +22,7 @@ public class AccountVo {
     /**
      * 用户岗位
      */
-    private String positionName;
+    private String posName;
 
     /**
      * 用户名
@@ -34,4 +34,28 @@ public class AccountVo {
      */
     private String password;
 
+    /**
+     * 岗位id
+     */
+    private String posId;
+
+    /**
+     * 部门id
+     */
+    private String deptId;
+
+    /**
+     * 部门名称
+     */
+    private String deptName;
+
+    /**
+     * 手机号
+     */
+    private String tel;
+
+    /**
+     * 操作范围
+     */
+    private Integer authRange;
 }

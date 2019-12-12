@@ -1,8 +1,6 @@
 package com.jiezhan.auth.config;
 
 import com.jiezhan.auth.filter.JwtFilter;
-import com.jiezhan.auth.shiro.realm.CodeRealm;
-import com.jiezhan.auth.shiro.realm.JwtRealm;
 import com.jiezhan.auth.shiro.realm.PasswordRealm;
 import com.jiezhan.auth.shiro.realm.UserModularRealmAuthenticator;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -85,14 +83,6 @@ public class ShiroConfig {
     }
 
 
-    /**
-     * jwtRealm
-     * @return JwtRealm
-     */
-    @Bean
-    public JwtRealm jwtRealm(){
-        return new JwtRealm();
-    }
 
     /**
      * Shiro内置过滤器，可以实现拦截器相关的拦截器
@@ -112,15 +102,13 @@ public class ShiroConfig {
         bean.setLoginUrl("/user/unLogin");
 
         Map<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/user/**","anon");
+        filterMap.put("/api/v2.0/auth/login/**","anon");
+        filterMap.put("/api/v2.0/auth/healthCheck","anon");
         filterMap.put("/static/**","anon");
-        filterMap.put("/user/logout", "logout");
         //从这里开始，是我为解决问题增加的，为swagger页面放行
-        filterMap.put("/swagger-ui.html", "anon");
-        filterMap.put("/swagger-resources/**", "anon");
-        filterMap.put("/v2/**", "anon");
-        filterMap.put("/webjars/**", "anon");
-        filterMap.put("/images/**", "anon");
+        filterMap.put("/index.html", "anon");
+        filterMap.put("/swagger/**", "anon");
+
 
         Map<String, Filter> filter = new HashMap<>(1);
         filter.put("jwt", new JwtFilter());
@@ -145,8 +133,6 @@ public class ShiroConfig {
      */
     @Bean
     public SecurityManager securityManager(@Qualifier("passwordRealm") PasswordRealm passwordRealm,
-                                           @Qualifier("codeRealm") CodeRealm codeRealm,
-                                           @Qualifier("jwtRealm") JwtRealm jwtRealm,
                                            @Qualifier("userModularRealmAuthenticator") UserModularRealmAuthenticator userModularRealmAuthenticator) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置realm
@@ -154,8 +140,6 @@ public class ShiroConfig {
         List<Realm> realms = new ArrayList<>();
         // 添加多个realm
         realms.add(passwordRealm);
-        realms.add(codeRealm);
-        realms.add(jwtRealm);
         securityManager.setRealms(realms);
 
         /*

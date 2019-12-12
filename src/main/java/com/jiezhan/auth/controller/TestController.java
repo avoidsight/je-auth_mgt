@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/api/2.0/auth")
+@RequestMapping("/api/v2.0/auth")
 public class TestController {
 
     @GetMapping("/healthCheck")
     public String healthCheck(){
+        System.out.println(this);
         return "success";
     }
 }

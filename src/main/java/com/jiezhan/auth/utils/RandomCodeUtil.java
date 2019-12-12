@@ -1,5 +1,6 @@
 package com.jiezhan.auth.utils;
 
+import com.jiezhan.auth.constant.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * @author: zp
@@ -18,10 +18,6 @@ import java.util.UUID;
  * @Description:
  */
 public class RandomCodeUtil {
-    /**
-     * 放到session中的key
-     */
-    public static final String RANDOMCODEKEY= "RANDOMVALIDATECODEKEY";
 
     /**
      * 随机产生数字与字母组合的字符串
@@ -53,7 +49,7 @@ public class RandomCodeUtil {
      * 获得字体
      */
     private Font getFont() {
-        return new Font("Fixedsys", Font.CENTER_BASELINE, 18);
+        return new Font("Fixedsys", Font.BOLD, 18);
     }
 
     /**
@@ -71,7 +67,7 @@ public class RandomCodeUtil {
     /**
      * 生成随机图片
      */
-    public void getRandcode(HttpServletRequest request, HttpServletResponse response) {
+    public String getRandcode(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
 
@@ -81,7 +77,7 @@ public class RandomCodeUtil {
         //图片大小
         g.fillRect(0, 0, width, height);
         //字体大小
-        g.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 18));
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         //字体颜色
         g.setColor(getRandColor(110, 133));
 
@@ -98,8 +94,8 @@ public class RandomCodeUtil {
         logger.info(randomString);
 
         //将生成的随机字符串保存到session中
-        session.removeAttribute(RANDOMCODEKEY);
-        session.setAttribute(RANDOMCODEKEY, randomString);
+        session.removeAttribute(Constant.RANDOM_CODE_KEY);
+        session.setAttribute(Constant.RANDOM_CODE_KEY, randomString);
         g.dispose();
 
         try {
@@ -108,6 +104,7 @@ public class RandomCodeUtil {
         } catch (Exception e) {
             logger.error("将内存中的图片通过流动形式输出到客户端失败>>>>   ", e);
         }
+        return randomString;
 
     }
 
@@ -118,8 +115,7 @@ public class RandomCodeUtil {
         g.setFont(getFont());
         g.setColor(new Color(random.nextInt(101), random.nextInt(111), random
                 .nextInt(121)));
-        String rand = String.valueOf(getRandomString(random.nextInt(randString
-                .length())));
+        String rand = getRandomString(random.nextInt(randString.length()));
         randomString += rand;
         g.translate(random.nextInt(3), random.nextInt(3));
         g.drawString(rand, 13 * i, 16);
@@ -140,14 +136,8 @@ public class RandomCodeUtil {
     /**
      * 获取随机的字符
      */
-    public String getRandomString(int num) {
+    private String getRandomString(int num) {
         return String.valueOf(randString.charAt(num));
     }
 
-    /**
-     * 生成验证码的标识
-     */
-    public String getCodeId(){
-        return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
-    }
 }
